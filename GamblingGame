@@ -1,12 +1,21 @@
 pragma solidity ^0.5.0;
+
+    // ABI for TokenGuard contract
+    contract TokenGuard {
+    
+    function transferTokens(address, uint256) public returns (bool) {}
+    
+                        }
+
 contract GamblingGame {
     
+    // a bet stores the gambler, its winning team and the amount of money he/she has placed in the bet 
     struct Bet{
-       string player;
+       address player;
        uint winningTeam;
        uint amount;
               }
-    
+        // a game, with its game-id, the teams contesting eachother, an arrayList of 'bets' and the total amount of ether in the bet.
     struct Game{
         uint gameId;
         string homeTeam;
@@ -15,18 +24,27 @@ contract GamblingGame {
         uint totalAmount;
         bool finished;
                }
-               
+   
+   // mapping between the player and the bet            
    mapping(address => Bet) public playerAddress;
    
+
     Game[] public games;
     address public organizer;
     uint private nrOfGames;
+    TokenGuard tokenGuard;
+    
     
    constructor() public {
     organizer = msg.sender;
     nrOfGames = 0;
                         }
                         
+    function gamblingGame(address _t) public {
+        tokenGuard = TokenGuard(_t);
+    }
+     
+    // the organizer can create new games to place bets on                   
     function createGame(string memory _home,string memory _away) public returns (bool) {
         require(msg.sender == organizer);
         games[nrOfGames].gameId = nrOfGames;
@@ -38,10 +56,12 @@ contract GamblingGame {
         return true;
     } 
     
-    function placeBet(string memory _player, uint _game_id ,uint _winningTeam, uint _amount) public returns (bool) {
+    // a player can place a bet on a specific game
+    function placeBet(address _player, uint _game_id ,uint _winningTeam, uint _amount) public returns (bool) {
         games[_game_id].bets.push(Bet({player:_player,winningTeam:_winningTeam,amount:_amount}));
     } 
     
+    // the organizer can finish the game. The profit can be divided over the winning players
      function finishGame(uint _game_id ,uint _winningTeam) public returns (uint) {
          require(msg.sender == organizer);
          
@@ -50,10 +70,13 @@ contract GamblingGame {
          
          for (uint i=0; i<arrayLength; i++) 
             {
-              if (games[_game_id].bets[i].winningTeam == _winningTeam ) {
+              if (games[_game_id].bets[i].winningTeam == _winningTeam ) {}
                   
                   
             }
+            
+            // set the game to 'finished'
+            games[_game_id].finished = true;
          
     } 
     
