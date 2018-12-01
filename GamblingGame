@@ -1,0 +1,60 @@
+pragma solidity ^0.5.0;
+contract GamblingGame {
+    
+    struct Bet{
+       string player;
+       uint winningTeam;
+       uint amount;
+              }
+    
+    struct Game{
+        uint gameId;
+        string homeTeam;
+        string awayTeam;
+        Bet[] bets;
+        uint totalAmount;
+        bool finished;
+               }
+               
+   mapping(address => Bet) public playerAddress;
+   
+    Game[] public games;
+    address public organizer;
+    uint private nrOfGames;
+    
+   constructor() public {
+    organizer = msg.sender;
+    nrOfGames = 0;
+                        }
+                        
+    function createGame(string memory _home,string memory _away) public returns (bool) {
+        require(msg.sender == organizer);
+        games[nrOfGames].gameId = nrOfGames;
+        games[nrOfGames].homeTeam = _home; 
+        games[nrOfGames].awayTeam = _away;
+        games[nrOfGames].totalAmount = 0;
+        games[nrOfGames].finished = false;
+        nrOfGames ++;
+        return true;
+    } 
+    
+    function placeBet(string memory _player, uint _game_id ,uint _winningTeam, uint _amount) public returns (bool) {
+        games[_game_id].bets.push(Bet({player:_player,winningTeam:_winningTeam,amount:_amount}));
+    } 
+    
+     function finishGame(uint _game_id ,uint _winningTeam) public returns (uint) {
+         require(msg.sender == organizer);
+         
+         // The length of the arrayList (=nr. of bets placed)
+         uint arrayLength = games[_game_id].bets.length;
+         
+         for (uint i=0; i<arrayLength; i++) 
+            {
+              if (games[_game_id].bets[i].winningTeam == _winningTeam ) {
+                  
+                  
+            }
+         
+    } 
+    
+}
