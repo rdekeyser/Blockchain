@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
     // ABI for TokenGuard contract
     contract TokenGuard {
     
-    function transferTokens(address, uint256) public returns (bool) {}
+    function transferTokens(address, uint256) public pure returns (bool) {}
     
                         }
 
@@ -34,10 +34,15 @@ contract GamblingGame {
     uint private nrOfGames;
     TokenGuard tokenGuard;
     
+    event gameCreated(uint _gameId, string _homeTeam, string _awayTeam);
+    event betPlaced(address _player, uint _game_id ,uint _winningTeam, uint _amount);
+    event transactionSentTo(address _to, uint _amount);
+    
     
    constructor() public {
     organizer = msg.sender;
     nrOfGames = 0;
+    gamblingGame(0x8Cb1F29551Ee9e5b02108fFc523c3bb8c1D56329);
                         }
                         
     function gamblingGame(address _t) public {
@@ -52,6 +57,7 @@ contract GamblingGame {
         games[nrOfGames].awayTeam = _away;
         games[nrOfGames].totalAmount = 0;
         games[nrOfGames].finished = false;
+        emit gameCreated(nrOfGames, _home, _away);
         nrOfGames ++;
         return true;
     } 
@@ -59,6 +65,7 @@ contract GamblingGame {
     // a player can place a bet on a specific game
     function placeBet(address _player, uint _game_id ,uint _winningTeam, uint _amount) public returns (bool) {
         games[_game_id].bets.push(Bet({player:_player,winningTeam:_winningTeam,amount:_amount}));
+        emit betPlaced(_player, _game_id , _winningTeam,  _amount);
     } 
     
     // the organizer can finish the game. The profit can be divided over the winning players
@@ -70,9 +77,10 @@ contract GamblingGame {
          
          for (uint i=0; i<arrayLength; i++) 
             {
-              if (games[_game_id].bets[i].winningTeam == _winningTeam ) {}
-                  
-                  
+              if (games[_game_id].bets[i].winningTeam == _winningTeam ) {
+                  tokenGuard.transferTokens(games[_game_id].bets[i].player, 1);
+                  emit transactionSentTo(games[_game_id].bets[i].player, 1);
+              }
             }
             
             // set the game to 'finished'
