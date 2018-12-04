@@ -1,0 +1,113 @@
+pragma solidity ^0.5.0;
+
+    // ABI for TokenGuard contract
+    contract TokenGuard {
+    
+    function transferTokens(address, uint256) public pure returns (bool) {}
+    
+                        }
+
+contract GamblingGame {
+    
+    // a bet stores the gambler, its winning team and the amount of money he/she has placed in the bet 
+    struct Bet{
+       address player;
+       uint winningTeam;
+       uint amount;
+              }
+        // a game, with its game-id, the teams contesting eachother, an arrayList of 'bets' and the total amount of ether in the bet.
+    struct Game{
+        uint gameId;
+        string homeTeam;
+        string awayTeam;
+        uint totalAmount;
+        bool finished;
+               }
+   
+   // mapping between the player and the bet            
+   mapping(uint => Game) public games;
+   mapping(uint => Bet[]) public bets;
+   
+
+    address public organizer;
+    uint private nrOfGames;
+    TokenGuard tokenGuard;
+    
+    event gameCreated(uint _gameId, string _homeTeam, string _awayTeam);
+    event betPlaced(address _player, uint _game_id ,uint _winningTeam, uint _amount);
+    event transactionSentTo(address _to, uint _amount);
+    
+    
+   constructor() public {
+    organizer = msg.sender;
+    nrOfGames = 0;
+    gamblingGame(0x8Cb1F29551Ee9e5b02108fFc523c3bb8c1D56329);
+                        }
+                        
+    function gamblingGame(address _t) public {
+        tokenGuard = TokenGuard(_t);
+    }
+     
+    // the organizer can create new games to place bets on                   
+    function createGame(string memory _home,string memory _away) public returns (bool) {
+        require(msg.sender == organizer);
+        games[nrOfGames].gameId = nrOfGames;
+        games[nrOfGames].homeTeam = _home; 
+        games[nrOfGames].awayTeam = _away;
+        games[nrOfGames].totalAmount = 0;
+        games[nrOfGames].finished = false;
+        emit gameCreated(nrOfGames, _home, _away);
+        nrOfGames ++;
+        return true;
+    } 
+    
+    // a player can place a bet on a specific game
+    function placeBet(address _player, uint _game_id ,uint _winningTeam, uint _amount) public returns (bool) {
+        bets[_game_id].push(Bet({player:_player,winningTeam:_winningTeam,amount:_amount}));
+        emit betPlaced(_player, _game_id , _winningTeam,  _amount);
+        return true;
+    } 
+    
+    // the organizer can finish the game. The profit can be divided over the winning players
+   /*  function finishGame(uint _game_id ,uint _winningTeam) public returns (bool) {
+         require(msg.sender == organizer);
+         
+         // The length of the arrayList (=nr. of bets placed)
+         uint arrayLength = bets[_game_id].length;
+         
+         for (uint i=0; i<arrayLength; i++) 
+            {
+              if (bets[_game_id][i].winningTeam == _winningTeam ) {
+                  tokenGuard.transferTokens(bets[_game_id][i].player, 1);
+                  emit transactionSentTo(bets[_game_id][i].player, 1);
+              }
+            }
+            
+            // set the game to 'finished'
+            games[_game_id].finished = true;
+            return true;     
+         
+    }    */
+    
+    function finishGame(uint _game_id ,uint _winningTeam) public returns (uint) {
+         require(msg.sender == organizer);
+         uint nrOfWinners = 0;
+         
+         // The length of the arrayList (=nr. of bets placed)
+         uint arrayLength = bets[_game_id].length;
+         
+         for (uint i=0; i<arrayLength; i++) 
+            {
+              if (bets[_game_id][i].winningTeam == _winningTeam ) {
+                 nrOfWinners ++;
+              }
+            }
+            
+            // set the game to 'finished'
+            games[_game_id].finished = true;
+            return nrOfWinners;     
+         
+    }
+    
+    
+}
