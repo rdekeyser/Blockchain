@@ -1,0 +1,245 @@
+[
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "games",
+		"outputs": [
+			{
+				"name": "gameId",
+				"type": "uint256"
+			},
+			{
+				"name": "homeTeam",
+				"type": "string"
+			},
+			{
+				"name": "awayTeam",
+				"type": "string"
+			},
+			{
+				"name": "totalAmount",
+				"type": "uint256"
+			},
+			{
+				"name": "finished",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "organizer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "bets",
+		"outputs": [
+			{
+				"name": "player",
+				"type": "address"
+			},
+			{
+				"name": "winningTeam",
+				"type": "uint256"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_t",
+				"type": "address"
+			}
+		],
+		"name": "gamblingGame",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_game_id",
+				"type": "uint256"
+			},
+			{
+				"name": "_winningTeam",
+				"type": "uint256"
+			}
+		],
+		"name": "finishGame",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_home",
+				"type": "string"
+			},
+			{
+				"name": "_away",
+				"type": "string"
+			}
+		],
+		"name": "createGame",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_player",
+				"type": "address"
+			},
+			{
+				"name": "_game_id",
+				"type": "uint256"
+			},
+			{
+				"name": "_winningTeam",
+				"type": "uint256"
+			},
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "placeBet",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_gameId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_homeTeam",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "_awayTeam",
+				"type": "string"
+			}
+		],
+		"name": "gameCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_player",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_game_id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_winningTeam",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "betPlaced",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "transactionSentTo",
+		"type": "event"
+	}
+]
