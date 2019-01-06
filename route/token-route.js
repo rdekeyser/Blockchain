@@ -1,4 +1,5 @@
 const token = require('../lib/token')
+
 function init(app) {
  const path = '/token'
  
@@ -10,5 +11,7 @@ function init(app) {
  
  // endpoint to finish a game
  app.get(path+'/finishGame', token.finishGame)
+
+ app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
 }
 module.exports = init;
